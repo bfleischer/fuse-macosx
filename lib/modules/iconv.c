@@ -773,6 +773,7 @@ static struct fuse_operations iconv_oper = {
 #endif
 	
 	.flag_nullpath_ok = 1,
+	.flag_nopath = 1,
 };
 
 static struct fuse_opt iconv_opts[] = {
