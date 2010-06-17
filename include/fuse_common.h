@@ -129,6 +129,8 @@ struct fuse_file_info {
  * FUSE_CAP_EXPORT_SUPPORT: filesystem handles lookups of "." and ".."
  * FUSE_CAP_BIG_WRITES: filesystem can handle write size larger than 4kB
  * FUSE_CAP_DONT_MASK: don't apply umask to file mode on create operations
+ * FUSE_CAP_SPLICE_WRITE: ability to use splice() to write to the fuse device
+ * FUSE_CAP_SPLICE_MOVE: ability to move data to the fuse device with splice()
  */
 #define FUSE_CAP_ASYNC_READ	(1 << 0)
 #define FUSE_CAP_POSIX_LOCKS	(1 << 1)
@@ -136,6 +138,8 @@ struct fuse_file_info {
 #define FUSE_CAP_EXPORT_SUPPORT	(1 << 4)
 #define FUSE_CAP_BIG_WRITES	(1 << 5)
 #define FUSE_CAP_DONT_MASK	(1 << 6)
+#define FUSE_CAP_SPLICE_WRITE	(1 << 7)
+#define FUSE_CAP_SPLICE_MOVE	(1 << 8)
 
 /**
  * Ioctl flags

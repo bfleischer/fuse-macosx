@@ -49,6 +49,10 @@ typedef unsigned long fuse_ino_t;
 /** Request pointer type */
 typedef struct fuse_req *fuse_req_t;
 
+#ifdef __APPLE__
+typedef uint64_t loff_t;
+#endif
+
 /**
  * Session
  *
@@ -129,6 +133,14 @@ struct fuse_ctx {
 #define FUSE_SET_ATTR_BKUPTIME	(1 << 30)
 #define FUSE_SET_ATTR_FLAGS	(1 << 31)
 #endif
+
+/**
+ * flags for fuse_reply_fd()
+ *
+ * FUSE_REPLY_FD_MOVE: attempt to move the data instead of copying
+ *                     (see SPLICE_F_MOVE flag for splice(2)
+ */
+#define FUSE_REPLY_FD_MOVE	(1 << 0)
 
 /* ----------------------------------------------------------- *
  * Request methods and replies				       *
@@ -418,6 +430,7 @@ struct fuse_lowlevel_ops {
 	 * Valid replies:
 	 *   fuse_reply_buf
 	 *   fuse_reply_iov
+	 *   fuse_reply_fd
 	 *   fuse_reply_err
 	 *
 	 * @param req request handle
@@ -567,6 +580,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
+	 *   fuse_reply_fd
 	 *   fuse_reply_err
 	 *
 	 * @param req request handle
@@ -657,6 +671,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
+	 *   fuse_reply_fd
 	 *   fuse_reply_xattr
 	 *   fuse_reply_err
 	 *
@@ -688,6 +703,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
+	 *   fuse_reply_fd
 	 *   fuse_reply_xattr
 	 *   fuse_reply_err
 	 *
@@ -1046,6 +1062,22 @@ int fuse_reply_write(fuse_req_t req, size_t count);
  * @return zero for success, -errno for failure to send reply
  */
 int fuse_reply_buf(fuse_req_t req, const char *buf, size_t size);
+
+/**
+ * Reply with data copied/moved from a file descriptor
+ *
+ * Possible requests:
+ *   read, readdir, getxattr, listxattr
+ *
+ * @param req request handle
+ * @param fd file descriptor
+ * @param off offset pointer, may be NULL
+ * @param len length of data in bytes
+ * @param flags FUSE_REPLY_FD_* flags
+ * @return zero for success, -errno for failure to send reply
+ */
+int fuse_reply_fd(fuse_req_t req, int fd, loff_t *off, size_t len,
+		  unsigned int flags);
 
 /**
  * Reply with data vector
