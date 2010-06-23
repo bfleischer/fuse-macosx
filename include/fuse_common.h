@@ -208,12 +208,22 @@ struct fuse_conn_info {
 	unsigned want;
 
 	/**
+	 * Maximum number of backgrounded requests
+	 */
+	unsigned max_background;
+
+	/**
+	 * Kernel congestion threshold parameter
+	 */
+	unsigned congestion_threshold;
+
+	/**
 	 * For future use.
 	 */
 #ifdef __APPLE__    
-	unsigned reserved[24];
+	unsigned reserved[22];
 #else
-	unsigned reserved[25];
+	unsigned reserved[23];
 #endif
 };
 
