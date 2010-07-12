@@ -134,14 +134,6 @@ struct fuse_ctx {
 #define FUSE_SET_ATTR_FLAGS	(1 << 31)
 #endif
 
-/**
- * flags for fuse_reply_fd()
- *
- * FUSE_REPLY_FD_MOVE: attempt to move the data instead of copying
- *                     (see SPLICE_F_MOVE flag for splice(2)
- */
-#define FUSE_REPLY_FD_MOVE	(1 << 0)
-
 #ifdef __APPLE__
 /* 
  * Even though Mac OS X does not support the splice implementation of
@@ -450,7 +442,7 @@ struct fuse_lowlevel_ops {
 	 * Valid replies:
 	 *   fuse_reply_buf
 	 *   fuse_reply_iov
-	 *   fuse_reply_fd
+	 *   fuse_reply_data
 	 *   fuse_reply_err
 	 *
 	 * @param req request handle
@@ -600,7 +592,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
-	 *   fuse_reply_fd
+	 *   fuse_reply_data
 	 *   fuse_reply_err
 	 *
 	 * @param req request handle
@@ -691,7 +683,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
-	 *   fuse_reply_fd
+	 *   fuse_reply_data
 	 *   fuse_reply_xattr
 	 *   fuse_reply_err
 	 *
@@ -723,7 +715,7 @@ struct fuse_lowlevel_ops {
 	 *
 	 * Valid replies:
 	 *   fuse_reply_buf
-	 *   fuse_reply_fd
+	 *   fuse_reply_data
 	 *   fuse_reply_xattr
 	 *   fuse_reply_err
 	 *
@@ -1084,20 +1076,18 @@ int fuse_reply_write(fuse_req_t req, size_t count);
 int fuse_reply_buf(fuse_req_t req, const char *buf, size_t size);
 
 /**
- * Reply with data copied/moved from a file descriptor
+ * Reply with data copied/moved from buffer(s)
  *
  * Possible requests:
  *   read, readdir, getxattr, listxattr
  *
  * @param req request handle
- * @param fd file descriptor
- * @param off offset pointer, may be NULL
- * @param len length of data in bytes
- * @param flags FUSE_REPLY_FD_* flags
+ * @param bufv buffer vector
+ * @param flags flags controlling the copy
  * @return zero for success, -errno for failure to send reply
  */
-int fuse_reply_fd(fuse_req_t req, int fd, loff_t *off, size_t len,
-		  unsigned int flags);
+int fuse_reply_data(fuse_req_t req, struct fuse_bufvec *bufv,
+		    enum fuse_buf_copy_flags flags);
 
 /**
  * Reply with data vector
