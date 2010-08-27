@@ -383,7 +383,7 @@ int fuse_version(void)
 
 #include "fuse_compat.h"
 
-#if !defined(__FreeBSD__) && !defined(__APPLE__)
+#if !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
 
 struct fuse *fuse_setup_compat22(int argc, char *argv[],
 				 const struct fuse_operations_compat22 *op,
@@ -441,7 +441,7 @@ FUSE_SYMVER(".symver fuse_teardown,__fuse_teardown@");
 FUSE_SYMVER(".symver fuse_main_compat2,fuse_main@");
 FUSE_SYMVER(".symver fuse_main_real_compat22,fuse_main_real@FUSE_2.2");
 
-#endif /* !__FreeBSD__ && !__APPLE__ */
+#endif /* !__FreeBSD__ && !__NetBSD__ && !__APPLE__ */
 
 
 struct fuse *fuse_setup_compat25(int argc, char *argv[],

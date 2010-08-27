@@ -1865,7 +1865,7 @@ const struct fuse_ctx *fuse_req_ctx_compat24(fuse_req_t req)
 {
 	return fuse_req_ctx(req);
 }
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(__NetBSD__)
 FUSE_SYMVER(".symver fuse_req_ctx_compat24,fuse_req_ctx@FUSE_2.4");
 #endif
 
@@ -2270,7 +2270,7 @@ int fuse_req_getgroups(fuse_req_t req, int size, gid_t list[])
 }
 #endif
 
-#if !defined(__FreeBSD__) && !defined(__APPLE__)
+#if !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__APPLE__)
 
 static void fill_open_compat(struct fuse_open_out *arg,
 			     const struct fuse_file_info_compat *f)
@@ -2372,7 +2372,7 @@ FUSE_SYMVER(".symver fuse_reply_statfs_compat,fuse_reply_statfs@FUSE_2.4");
 FUSE_SYMVER(".symver fuse_reply_open_compat,fuse_reply_open@FUSE_2.4");
 FUSE_SYMVER(".symver fuse_lowlevel_new_compat,fuse_lowlevel_new@FUSE_2.4");
 
-#else /* __FreeBSD__ || __APPLE__ */
+#else /* __FreeBSD__ || __NetBSD__ || __APPLE__ */
 
 int fuse_sync_compat_args(struct fuse_args *args)
 {
@@ -2380,7 +2380,7 @@ int fuse_sync_compat_args(struct fuse_args *args)
 	return 0;
 }
 
-#endif /* __FreeBSD__ || __APPLE__ */
+#endif /* __FreeBSD__ || __NetBSD__ || __APPLE__ */
 
 struct fuse_session *fuse_lowlevel_new_compat25(struct fuse_args *args,
 				const struct fuse_lowlevel_ops_compat25 *op,

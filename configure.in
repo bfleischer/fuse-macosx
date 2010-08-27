@@ -5,6 +5,7 @@ AM_INIT_AUTOMAKE
 
 case $target_os in
      *linux*)	arch=linux;;
+     *netbsd*)  arch=netbsd;;
      *bsd*)	arch=bsd;;
      *darwin*)	arch=darwin;;     
      *)		arch=unknown;;
@@ -108,6 +109,7 @@ AC_SUBST(pc_fuse_cflags)
 AC_SUBST(pc_fuse_ino64_cflags)
 
 AM_CONDITIONAL(LINUX, test "$arch" = linux)
+AM_CONDITIONAL(NETBSD, test "$arch" = netbsd)
 AM_CONDITIONAL(BSD, test "$arch" = bsd)
 AM_CONDITIONAL(DARWIN, test "$arch" = darwin)
 
