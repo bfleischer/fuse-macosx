@@ -60,7 +60,7 @@ if DARWIN
 libfuse_ino64_la_SOURCES = $(libfuse_la_SOURCES)
 endif
 
-fuse_version_number=2:8:4
+fuse_version_number=2:8:5
 if DARWIN
 libfuse_la_CPPFLAGS = $(AM_CPPFLAGS) -D__DARWIN_64_BIT_INO_T=0
 libfuse_la_LDFLAGS = -version-number $(fuse_version_number)
