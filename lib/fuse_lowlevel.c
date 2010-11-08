@@ -1244,6 +1244,7 @@ static void do_write(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
 static void do_write_buf(fuse_req_t req, fuse_ino_t nodeid, const void *inarg,
 			 const struct fuse_buf *ibuf)
 {
+	struct fuse_ll *f = req->f;
 	struct fuse_buf buf = *ibuf;
 	struct fuse_bufvec bufv = {
 		.buf = &buf,
@@ -1274,15 +1275,16 @@ static void do_write_buf(fuse_req_t req, fuse_ino_t nodeid, const void *inarg,
 	if (buf.size < arg->size) {
 		fprintf(stderr, "fuse: do_write_buf: buffer size too small\n");
 		fuse_reply_err(req, EIO);
-		return;
+		goto out;
 	}
 	buf.size = arg->size;
 
 	req->f->op.write_buf(req, nodeid, &bufv, arg->offset, &fi);
 
+out:
 	/* Need to reset the pipe if ->write_buf() didn't consume all data */
 	if ((ibuf->flags & FUSE_BUF_IS_FD) && bufv.idx < bufv.count)
-		fuse_ll_clear_pipe(req->f);
+		fuse_ll_clear_pipe(f);
 }
 
 static void do_flush(fuse_req_t req, fuse_ino_t nodeid, const void *inarg)
