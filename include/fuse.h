@@ -521,7 +521,18 @@ struct fuse_operations {
 	 */
 	int (*poll) (const char *, struct fuse_file_info *,
 		     struct fuse_pollhandle *ph, unsigned *reventsp);
-	
+
+	/** Write contents of buffer to an open file
+	 *
+	 * Similar to the write() method, but data is supplied in a
+	 * generic buffer.  Use fuse_buf_copy() to transfer data to
+	 * the destination.
+	 *
+	 * Introduced in version 2.9
+	 */
+	int (*write_buf) (const char *, struct fuse_bufvec *buf, off_t off,
+			  struct fuse_file_info *);
+
 #ifdef __APPLE__
 	int (*reserved00)(void *, void *, void *, void *, void *, void *,
 			  void *, void *);
@@ -536,8 +547,6 @@ struct fuse_operations {
 	int (*reserved05)(void *, void *, void *, void *, void *, void *,
 			  void *, void *);
 	int (*reserved06)(void *, void *, void *, void *, void *, void *,
-			  void *, void *);
-	int (*reserved07)(void *, void *, void *, void *, void *, void *,
 			  void *, void *);
 
 	int (*setvolname) (const char *);
@@ -778,6 +787,9 @@ int fuse_fs_read(struct fuse_fs *fs, const char *path, char *buf, size_t size,
 		 off_t off, struct fuse_file_info *fi);
 int fuse_fs_write(struct fuse_fs *fs, const char *path, const char *buf,
 		  size_t size, off_t off, struct fuse_file_info *fi);
+int fuse_fs_write_buf(struct fuse_fs *fs, const char *path,
+		      struct fuse_bufvec *buf, off_t off,
+		      struct fuse_file_info *fi);
 int fuse_fs_fsync(struct fuse_fs *fs, const char *path, int datasync,
 		  struct fuse_file_info *fi);
 int fuse_fs_flush(struct fuse_fs *fs, const char *path,
