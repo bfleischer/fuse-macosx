@@ -870,6 +870,10 @@ out_free:
 	free(ic->from_code);
 	free(ic->to_code);
 	free(ic);
+	if (old) {
+		setlocale(LC_CTYPE, old);
+		free(old);
+	}
 	return NULL;
 }
 
