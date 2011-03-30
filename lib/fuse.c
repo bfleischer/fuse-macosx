@@ -898,7 +898,6 @@ static int try_get_path(struct fuse *f, fuse_ino_t nodeid, const char *name,
 		}
 	}
 
-	err = 0;
 	for (node = get_node(f, nodeid); node->nodeid != FUSE_ROOT_ID;
 	     node = node->parent) {
 		err = -ENOENT;
