@@ -118,6 +118,11 @@ struct fuse_ctx {
 	mode_t umask;
 };
 
+struct fuse_forget_data {
+	uint64_t ino;
+	uint64_t nlookup;
+};
+
 /* 'to_set' flags in setattr */
 #define FUSE_SET_ATTR_MODE	(1 << 0)
 #define FUSE_SET_ATTR_UID	(1 << 1)
@@ -954,6 +959,19 @@ struct fuse_lowlevel_ops {
 	void (*retrieve_reply) (void *cookie, fuse_ino_t ino, off_t offset,
 				struct fuse_bufvec *bufv);
 
+	/**
+	 * Forget about multiple inodes
+	 *
+	 * Introduced in version 2.9
+	 *
+	 * Valid replies:
+	 *   fuse_reply_none
+	 *
+	 * @param req request handle
+	 */
+	void (*forget_multi) (fuse_req_t req, size_t count,
+			      struct fuse_forget_data *forgets);
+
 #ifdef __APPLE__
 
 	void (*reserved00) (fuse_req_t req, fuse_ino_t ino,
@@ -967,8 +985,6 @@ struct fuse_lowlevel_ops {
 	void (*reserved04) (fuse_req_t req, fuse_ino_t ino,
 			    void *, void *, void *, void *, void *, void *);
 	void (*reserved05) (fuse_req_t req, fuse_ino_t ino,
-			    void *, void *, void *, void *, void *, void *);
-	void (*reserved06) (fuse_req_t req, fuse_ino_t ino,
 			    void *, void *, void *, void *, void *, void *);
 
 	void (*setvolname) (fuse_req_t req, const char *name);
