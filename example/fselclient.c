@@ -9,6 +9,18 @@
   gcc -Wall fselclient.c -o fselclient
 */
 
+#ifdef __APPLE__
+#include <stdio.h>
+
+int
+main(void)
+{
+    fprintf(stderr, "This example is not supported on this platform.\n");
+    return 1;
+}
+
+#else /* !__APPLE__ */
+
 #include <sys/select.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -19,6 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+
 
 #define FSEL_FILES	16
 
@@ -70,3 +83,5 @@ int main(void)
 		printf("\n");
 	}
 }
+
+#endif /* !__APPLE__ */

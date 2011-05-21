@@ -2,6 +2,17 @@ AC_INIT(fuse, 2.8.4)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE
+
+case $target_os in
+     *linux*)	arch=linux;;
+     *bsd*)	arch=bsd;;
+     *darwin*)	arch=darwin;;     
+     *)		arch=unknown;;
+esac
+
+if test "$arch" = darwin; then
+	AC_DEFINE(_POSIX_C_SOURCE, 200112L, [Set _POSIX_C_SOURCE on Darwin])
+fi
 AM_CONFIG_HEADER(include/config.h)
 
 AC_PROG_LIBTOOL
@@ -13,12 +24,6 @@ if test -z "$mkdir_p"; then
 	mkdir_p="../mkinstalldirs"
 	AC_SUBST(mkdir_p)
 fi
-
-case $target_os in
-     *linux*)	arch=linux;;
-     *bsd*)	arch=bsd;;
-     *)		arch=unknown;;
-esac
 
 if test "$ac_env_CFLAGS_set" != set; then
 	CFLAGS="-Wall -W -Wno-sign-compare -Wstrict-prototypes -Wmissing-declarations -Wwrite-strings -g -O2 -fno-strict-aliasing"
@@ -70,7 +75,9 @@ AC_ARG_WITH([libiconv-prefix],
       if test -d $dir/lib; then LDFLAGS="$LDFLAGS -L$dir/lib"; fi
     done
    ])
-AM_ICONV
+if test "$arch" != darwin; then
+	AM_ICONV
+fi
 libfuse_libs="$libfuse_libs $LIBICONV"
 AM_CONDITIONAL(ICONV, test "$am_cv_func_iconv" = yes)
 AC_SUBST(libfuse_libs)
@@ -90,8 +97,19 @@ AC_SUBST(INIT_D_PATH)
 
 AC_SUBST(subdirs2)
 
+if test "$arch" = darwin; then
+	pc_fuse_cflags="-D__DARWIN_64_BIT_INO_T=0"
+	pc_fuse_ino64_cflags="-D__DARWIN_64_BIT_INO_T=1"
+else
+	pc_fuse_cflags=
+	pc_fuse_ino64_cflags=
+fi
+AC_SUBST(pc_fuse_cflags)
+AC_SUBST(pc_fuse_ino64_cflags)
+
 AM_CONDITIONAL(LINUX, test "$arch" = linux)
 AM_CONDITIONAL(BSD, test "$arch" = bsd)
+AM_CONDITIONAL(DARWIN, test "$arch" = darwin)
 
-AC_CONFIG_FILES([fuse.pc Makefile lib/Makefile util/Makefile example/Makefile include/Makefile])
+AC_CONFIG_FILES([fuse.pc fuse_ino64.pc Makefile lib/Makefile util/Makefile example/Makefile include/Makefile])
 AC_OUTPUT

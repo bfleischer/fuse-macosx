@@ -1,0 +1,21 @@
+Dependencies
+============
+
+Mac OS X 10.5 or later
+
+Installation
+============
+
+Follow these instructions to build FUSE for Mac OS X 10.5 and later (32/64 bit Intel architecture) on Mac OS X 10.6.
+
+To create the configure script needed for building FUSE, execute makeconf.sh in a GNU build environment providing the following tools: 
+glibtoolize, autoreconf, aclocal, autoheader, autoconf, automake and gettext
+The listed tools can be installed trough MacPorts (http://www.macports.org). The configuration file config.rpath (part of gettext) is expected to be at /opt/local/share/gettext/config.rpath.
+
+Issue the following commands to install libfuse (32 bit inodes) and libfuse_ino64 (64 bit inodes) in /usr/local/lib/:
+./configure --prefix=/usr/local --disable-dependency-tracking --disable-static CFLAGS="-arch i386 -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.6.sdk -mmacosx-version-min=10.5" LDFLAGS="-arch i386 -arch x86_64 -framework CoreFoundation"
+make
+sudo make install
+
+The following FUSE example filesystems are supported:
+fusexmp_fh, hello, hello_ll, null

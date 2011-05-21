@@ -4,8 +4,14 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = @subdirs2@
 
+if DARWIN
+extra_pkgconfig = fuse.pc.in fuse_ino64.pc.in
+else
+extra_pkgconfig = fuse.pc.in
+endif
+
 EXTRA_DIST =			\
-	fuse.pc.in		\
+	$(extra_pkgconfig)	\
 	README*			\
 	Filesystems		\
 	FAQ			\
@@ -14,6 +20,10 @@ EXTRA_DIST =			\
 	doc/Doxyfile
 
 pkgconfigdir = @pkgconfigdir@
+if DARWIN
+pkgconfig_DATA = fuse.pc fuse_ino64.pc
+else
 pkgconfig_DATA = fuse.pc
+endif
 
 $(pkgconfig_DATA): config.status
