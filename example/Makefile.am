@@ -12,11 +12,11 @@ noinst_PROGRAMS = fusexmp fusexmp_fh null hello hello_ll fioc fioclient \
 		  fsel fselclient cusexmp
 
 if DARWIN
-LDADD = ../lib/libfuse_ino64.la @libfuse_libs@
+LDADD = ../lib/libfuse_ino64.la
 fusexmp_fh_LDADD = $(LDADD)
 else
-LDADD = ../lib/libfuse.la @libfuse_libs@
-fusexmp_fh_LDADD = ../lib/libfuse.la ../lib/libulockmgr.la @libfuse_libs@
+LDADD = ../lib/libfuse.la
+fusexmp_fh_LDADD = ../lib/libfuse.la ../lib/libulockmgr.la
 endif
 
 fioclient_CPPFLAGS =
