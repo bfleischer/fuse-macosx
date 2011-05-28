@@ -139,26 +139,6 @@ struct fuse_forget_data {
 #define FUSE_SET_ATTR_FLAGS	(1 << 31)
 #endif
 
-#ifdef __APPLE__
-/* 
- * Even though Mac OS X does not support the splice implementation of
- * Linux, define the associated flags to avoid undeclared identifier 
- * errors.
- */
-#ifndef SPLICE_F_MOVE
-#define SPLICE_F_MOVE           0x01
-#endif
-#ifndef SPLICE_F_NONBLOCK
-#define SPLICE_F_NONBLOCK       0x02
-#endif
-#ifndef SPLICE_F_MORE
-#define SPLICE_F_MORE           0x04
-#endif
-#ifndef SPLICE_F_GIFT
-#define SPLICE_F_GIFT           0x08
-#endif
-#endif /* !__APPLE__ */	
-
 /* ----------------------------------------------------------- *
  * Request methods and replies				       *
  * ----------------------------------------------------------- */
